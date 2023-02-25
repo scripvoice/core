@@ -1,4 +1,4 @@
-module optionExchange.com/core
+module github.com/scripvoice/core
 
 go 1.19
 
