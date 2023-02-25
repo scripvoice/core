@@ -3,6 +3,7 @@ module github.com/scripvoice/core
 go 1.19
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/google/wire v0.5.0 // indirect

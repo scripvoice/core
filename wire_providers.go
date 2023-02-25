@@ -9,11 +9,9 @@ func ProvideMySqlContext() *MySqlContext {
 	return NewMySqlContext(viper.GetString("db_conn"))
 	}
 
-func ProvideJwtAuth() *JwtAuth{
+func ProvideJwtAuth() *JwtAuth {
 	return NewJwtAuth()
 }
 
 	var DependencySet = wire.NewSet(
-		ProvideMySqlContext,
-		ProvideJwtAuth
-	)
+		ProvideMySqlContext, ProvideJwtAuth	)

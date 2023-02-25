@@ -11,11 +11,11 @@ type JwtAuth struct{
 
 }
 
-func NewJwtAuth(){
+func NewJwtAuth() *JwtAuth{
 	return &JwtAuth{}
 }
 
-func (*jwtAuth JwtAuth) GetToken(email string) (string, error){
+func (jwtAuth *JwtAuth) GetToken(email string) (string, error){
 
 	// Create JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
