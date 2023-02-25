@@ -1,6 +1,7 @@
 package core
 
 import (	
+	"fmt"
     "time"
 	"errors"
     "github.com/dgrijalva/jwt-go"
@@ -31,3 +32,24 @@ func (jwtAuth *JwtAuth) GetToken(email string) (string, error){
 
 	return tokenString, err
 }
+
+func (jwtAuth *JwtAuth) ValidateToken(tokenString string) (bool, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Verify that the signing method is valid
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		// Return the secret key used to sign the token
+		return []byte(viper.GetString("secret")), nil
+	})
+	if err != nil {
+		return false, err
+	}
+	// Check if the token is valid
+	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
+
