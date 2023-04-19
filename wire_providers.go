@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/wire"
 	config "github.com/scripvoice/core/config"
-	store "github.com/scripvoice/core/infrastructure/datastore/mysql"
+	store "github.com/scripvoice/core/datastore"
 	"github.com/spf13/viper"
 )
 
