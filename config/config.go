@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/scripvoice/UserService/pkg/logger"
+	"github.com/scripvoice/core/logger"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
@@ -75,6 +75,7 @@ type appConfig struct {
 	Server           ServerConfig
 	ConnectionString string
 	ZapConfig        zap.Config
+	Secret           string
 }
 
 var Values appConfig
