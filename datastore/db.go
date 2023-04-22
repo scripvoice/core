@@ -59,8 +59,8 @@ func (s *SqlStore) Rollback() *gorm.DB {
 func GetRepo[T Irepo](s *SqlStore) (T, error) {
 	t := new(T)
 	var r Irepo = (*t).SetStore(s)
-	v, err := r.(T)
-	if err {
+	v, ok := r.(T)
+	if !ok {
 		return *t, errors.New("Unable to get base repo")
 	}
 
