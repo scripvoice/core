@@ -1,27 +1,27 @@
 package core
 
-import (	
-	"fmt"
-    "time"
+import (
 	"errors"
-    "github.com/dgrijalva/jwt-go"
+	"fmt"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/spf13/viper"
 )
 
-type JwtAuth struct{
-
+type JwtAuth struct {
 }
 
-func NewJwtAuth() *JwtAuth{
+func NewJwtAuth() *JwtAuth {
 	return &JwtAuth{}
 }
 
-func (jwtAuth *JwtAuth) GetToken(email string) (string, error){
+func (jwtAuth *JwtAuth) GetToken(email string) (string, error) {
 
 	// Create JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
-		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
+		"exp":   time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string
@@ -33,7 +33,7 @@ func (jwtAuth *JwtAuth) GetToken(email string) (string, error){
 	return tokenString, err
 }
 
-func (jwtAuth *JwtAuth) ValidateToken(tokenString string) (bool, error) {
+func (jwtAuth *JwtAuth) ValidateToken(tokenString string) (bool, jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Verify that the signing method is valid
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -43,13 +43,13 @@ func (jwtAuth *JwtAuth) ValidateToken(tokenString string) (bool, error) {
 		return []byte(viper.GetString("secret")), nil
 	})
 	if err != nil {
-		return false, err
+		return false, nil, err
 	}
+
 	// Check if the token is valid
-	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		return true, nil
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return true, claims, nil
 	} else {
-		return false, nil
+		return false, nil, nil
 	}
 }
-

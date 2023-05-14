@@ -5,11 +5,11 @@ type IMediator interface {
 }
 
 type DomainEventMediator struct {
-	eventFactory EventFactory
+	*eventFactory EventFactory
 }
 
 // NewDomainEventMediator creates a new instance of DomainEventMediator.
-func NewDomainEventMediator(eventFactory EventFactory) *DomainEventMediator {
+func NewDomainEventMediator(*eventFactory EventFactory) *DomainEventMediator {
 	return &DomainEventMediator{
 		eventFactory: eventFactory,
 	}
