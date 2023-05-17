@@ -8,6 +8,9 @@ type AggregateRoot struct {
 
 // ApplyChange applies a domain event to the aggregate root.
 func (ar *AggregateRoot) ApplyChange(event DomainEvent) {
+	if ar.Changes == nil {
+		ar.Changes = make([]DomainEvent, 0)
+	}
 	ar.Changes = append(ar.Changes, event)
 }
 
