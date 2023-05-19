@@ -18,11 +18,11 @@ type DomainQueryHandlerFactory struct {
 }
 
 // Register a new query handler with the factory
-func (f *DomainQueryHandlerFactory) RegisterHandler(handler DomainQueryHandler) {
+func (f *DomainQueryHandlerFactory) RegisterHandler(queryName string, handler DomainQueryHandler) {
 	if f.handlers == nil {
 		f.handlers = make(map[string]DomainQueryHandler)
 	}
-	f.handlers[handler.QueryName()] = handler
+	f.handlers[queryName] = handler
 }
 
 // Resolve a query handler from the factory by its name

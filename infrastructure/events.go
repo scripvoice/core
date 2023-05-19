@@ -36,6 +36,6 @@ func (factory *EventFactory) ResolveEventHandler(eventType string) EventHandler 
 	return nil
 }
 
-type EventRegistrator interface{
-	Register(*factory EventFactory)
+type EventRegistrator interface {
+	Register(factory *EventFactory)
 }
