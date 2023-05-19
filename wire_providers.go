@@ -23,7 +23,7 @@ func ProvideJwtAuth() *JwtAuth {
 }
 
 func ProvideEventFactory() *infra.EventFactory {
-	return infra.GetEventFactoryInstance()()
+	return infra.GetEventFactoryInstance()
 }
 
 func ProvideDomainEventMediator(eventFactory *infra.EventFactory) *infra.DomainEventMediator {
