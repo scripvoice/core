@@ -1,5 +1,9 @@
 package infrastructure
 
+import (
+	"sync"
+)
+
 // DomainEvent defines the interface for domain events.
 type DomainEvent interface {
 	GetName() string
@@ -20,6 +24,19 @@ func NewEventFactory() *EventFactory {
 	return &EventFactory{
 		eventHandlers: make(map[string]EventHandler),
 	}
+}
+
+var (
+	instance *EventFactory
+	once     sync.Once
+)
+
+// GetInstance returns the singleton instance
+func GetEventFactoryInstance() *EventFactory {
+	once.Do(func() {
+		instance = NewEventFactory() // Create the singleton instance
+	})
+	return instance
 }
 
 // RegisterEventHandler registers an event handler for a specific event type.
