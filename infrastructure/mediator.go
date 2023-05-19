@@ -16,7 +16,7 @@ func NewDomainEventMediator(eventFactory *EventFactory) *DomainEventMediator {
 }
 
 // NotifyHandlers notifies the event handlers based on the domain events received.
-func (mediator *DomainEventMediator) NotifyHandlers(domainEvents []DomainEvent) {
+func (mediator DomainEventMediator) NotifyHandlers(domainEvents []DomainEvent) {
 	for _, event := range domainEvents {
 		handler := mediator.eventFactory.ResolveEventHandler(event.GetName())
 		if handler != nil {
