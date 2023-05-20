@@ -26,16 +26,24 @@ type SqlStore struct {
 	HasTransaction bool
 }
 
-func (s *SqlStore) DB() *gorm.DB {
+func (s *SqlStore) Db() *gorm.DB {
 	return s.db
 }
 
-func NewMysqlStore(ctx context.Context, ConnectionString string) (*SqlStore, error) {
+func (s *SqlStore) DbWithContext(ctx context.Context) *gorm.DB {
+	return s.db.WithContext(ctx)
+}
+
+func (s *SqlStore) SetDbContext(ctx context.Context) {
+	s.db.WithContext(ctx)
+}
+
+func NewMysqlStore(ConnectionString string) (*SqlStore, error) {
 	db, err := GetMysqlDb(ConnectionString)
 	if err != nil {
 		return nil, err
 	}
-	return &SqlStore{db: db.WithContext(ctx)}, nil
+	return &SqlStore{db: db}, nil
 }
 
 func (s *SqlStore) BeginTran(opts *sql.TxOptions) *gorm.DB {
