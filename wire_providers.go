@@ -1,8 +1,6 @@
 package core
 
 import (
-	"context"
-
 	"github.com/google/wire"
 	config "github.com/scripvoice/core/config"
 	store "github.com/scripvoice/core/datastore"
@@ -14,8 +12,8 @@ func ProvideMySqlContext() *MySqlContext {
 	return NewMySqlContext(viper.GetString("ConnectionString"))
 }
 
-func ProvideDbContext(ctx context.Context) (*store.SqlStore, error) {
-	return store.NewMysqlStore(ctx, config.Values.ConnectionString)
+func ProvideDbContext() (*store.SqlStore, error) {
+	return store.NewMysqlStore(config.Values.ConnectionString)
 }
 
 func ProvideJwtAuth() *JwtAuth {
