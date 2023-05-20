@@ -26,9 +26,18 @@ func ProvideEventFactory() *infra.EventFactory {
 	return infra.GetEventFactoryInstance()
 }
 
+func ProvideCommandFactory() *infra.CommandFactory {
+	return infra.GetCommandFactoryInstance()
+}
+
+func ProvideQueryFactory() *infra.DomainQueryHandlerFactory {
+	return infra.GetDomainQueryHandlerFactoryInstance()
+}
+
 func ProvideDomainEventMediator(eventFactory *infra.EventFactory) *infra.DomainEventMediator {
 	return infra.NewDomainEventMediator(eventFactory)
 }
 
 var DependencySet = wire.NewSet(
-	ProvideMySqlContext, ProvideJwtAuth, ProvideDbContext, ProvideEventFactory, ProvideDomainEventMediator)
+	ProvideMySqlContext, ProvideJwtAuth, ProvideDbContext, ProvideEventFactory,
+	ProvideDomainEventMediator, ProvideCommandFactory, ProvideQueryFactory)

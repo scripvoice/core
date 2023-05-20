@@ -1,5 +1,9 @@
 package infrastructure
 
+import (
+	"sync"
+)
+
 // Command defines the interface for commands.
 type Command interface {
 	GetName() string
@@ -22,6 +26,19 @@ func NewCommandFactory() *CommandFactory {
 	}
 }
 
+var (
+	commandfactoryinstance *CommandFactory
+	oncecommandfactory     sync.Once
+)
+
+// GetInstance returns the singleton instance
+func GetCommandFactoryInstance() *CommandFactory {
+	oncecommandfactory.Do(func() {
+		commandfactoryinstance = NewCommandFactory() // Create the singleton instance
+	})
+	return commandfactoryinstance
+}
+
 // RegisterCommandHandler registers an command handler for a specific command type.
 func (factory *CommandFactory) RegisterCommandHandler(commandType string, handler CommandHandler) {
 	factory.commandHandlers[commandType] = handler
@@ -34,4 +51,8 @@ func (factory *CommandFactory) ResolveCommandHandler(commandType string) Command
 		return handler
 	}
 	return nil
+}
+
+type CommandRegistrator interface {
+	Register(factory *CommandFactory)
 }

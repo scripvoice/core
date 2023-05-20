@@ -27,16 +27,16 @@ func NewEventFactory() *EventFactory {
 }
 
 var (
-	instance *EventFactory
-	once     sync.Once
+	eventfactoryinstance *EventFactory
+	onceeventfactory     sync.Once
 )
 
 // GetInstance returns the singleton instance
 func GetEventFactoryInstance() *EventFactory {
-	once.Do(func() {
-		instance = NewEventFactory() // Create the singleton instance
+	onceeventfactory.Do(func() {
+		eventfactoryinstance = NewEventFactory() // Create the singleton instance
 	})
-	return instance
+	return eventfactoryinstance
 }
 
 // RegisterEventHandler registers an event handler for a specific event type.
