@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"context"
 	"sync"
 )
 
@@ -11,7 +12,7 @@ type Command interface {
 
 // CommandHandler defines the interface for command handlers.
 type CommandHandler interface {
-	HandleCommand(command Command)
+	HandleCommand(command Command, context *context.Context)
 }
 
 // CommandFactory represents the factory class that resolves the command handler based on the command type.

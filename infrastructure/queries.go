@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"context"
 	"fmt"
 	"sync"
 )
@@ -12,7 +13,7 @@ type DomainQuery interface {
 
 // Define the domain query handler interface
 type DomainQueryHandler interface {
-	Execute(query DomainQuery) (interface{}, error)
+	Execute(query DomainQuery, context *context.Context) (interface{}, error)
 }
 
 // Define the domain query handler factory type
