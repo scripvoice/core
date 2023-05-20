@@ -12,7 +12,7 @@ type DomainEvent interface {
 
 // EventHandler defines the interface for event handlers.
 type EventHandler interface {
-	HandleEvent(event DomainEvent, context *context.Context)
+	HandleEvent(event DomainEvent, context context.Context)
 }
 
 // EventFactory represents the factory class that resolves the event handler based on the event type.
