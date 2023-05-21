@@ -1,20 +1,49 @@
 package logger
 
 import (
+	"fmt"
+
+	config "github.com/scripvoice/core/config"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 type ZapLogger struct {
 	logger *zap.Logger
 }
 
-func NewZapLogger(config zap.Config) (ILogger, error) {
+func NewZapLogger(zapConfig config.ZapConfig) (ILogger, error) {
 	//config := zap.NewProductionConfig()
 	//config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
-	logger, err := config.Build()
+
+	// Set the logging level
+	level := zap.NewAtomicLevel()
+	err := level.UnmarshalText([]byte(zapConfig.Level))
 	if err != nil {
+		fmt.Println("Failed to parse log level:", err)
 		return nil, err
 	}
+
+	// Create the Zap logger config
+	zapConfigStruct := zap.Config{
+		Level:            level,
+		Encoding:         zapConfig.Encoding,
+		OutputPaths:      zapConfig.OutputPaths,
+		ErrorOutputPaths: zapConfig.ErrorOutputPaths,
+		EncoderConfig: zapcore.EncoderConfig{
+			MessageKey: "message",
+			LevelKey:   "level",
+		},
+	}
+
+	// Build the logger
+	logger, err := zapConfigStruct.Build()
+	if err != nil {
+		fmt.Println("Failed to build logger:", err)
+		return nil, err
+	}
+
+	fmt.Println("logger initialized successfully.")
 	return ZapLogger{
 		logger: logger,
 	}, nil

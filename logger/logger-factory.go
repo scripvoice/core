@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"go.uber.org/zap"
+	config "github.com/scripvoice/core/config"
 )
 
 var (
@@ -13,14 +13,23 @@ var (
 )
 
 // GetInstance returns the singleton instance
-func GetLoggerInstance(config zap.Config) (ILogger, error) {
+func InitLogger(config config.ZapConfig) (ILogger, error) {
 	var err error
 	oncelogger.Do(func() {
 		loggerInstance, err = NewZapLogger(config) // Create the singleton instance
 	})
 	if err != nil {
-		fmt.Println("error creating logger")
+		fmt.Println(err)
 		panic("error creating logger")
 	}
 	return loggerInstance, err
+}
+
+func GetLogger() (ILogger, error) {
+	if loggerInstance == nil {
+
+		return nil, nil
+	}
+	return loggerInstance, nil
+
 }

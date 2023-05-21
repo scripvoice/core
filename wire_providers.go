@@ -22,7 +22,7 @@ func ProvideJwtAuth() *JwtAuth {
 }
 
 func ProvideLogger() (logger.ILogger, error) {
-	return logger.GetLoggerInstance(config.Values.ZapConfig)
+	return logger.GetLogger()
 }
 
 func ProvideEventFactory() *infra.EventFactory {

@@ -8,9 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/scripvoice/core/logger"
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
 )
 
 var (
@@ -71,14 +69,25 @@ var DefalutServerConfig = ServerConfig{
 	Port: 8000,
 }
 
-type appConfig struct {
+type ZapConfig struct {
+	Level            string   `json:"level"`
+	Encoding         string   `json:"encoding"`
+	OutputPaths      []string `json:"outputPaths"`
+	ErrorOutputPaths []string `json:"errorOutputPaths"`
+}
+
+type BaseConfig struct {
 	Server           ServerConfig
 	ConnectionString string
-	ZapConfig        zap.Config
+	ZapConfig        ZapConfig
 	Secret           string
 }
 
-var Values appConfig
+var Values BaseConfig
+
+type IAppConfig interface {
+	GetBaseConfig() BaseConfig
+}
 
 /*
 Initialize Flag so all the flag parameters should be populated before calling this method
@@ -92,11 +101,7 @@ func InitializeFlag() {
 Should be called first to initialize the config.
 Value is populated from config file provided through flag and overridden by env
 */
-func Initialize(settings interface{}) {
-
-	if settings == nil {
-		settings = Values
-	}
+func Initialize(appConfig IAppConfig) {
 
 	fmt.Println("Initializing config")
 	InitializeFlag()
@@ -104,15 +109,22 @@ func Initialize(settings interface{}) {
 	if v, err := LoadConfig(*ConfigPath); err != nil {
 		panic(err)
 	} else {
-		v.Unmarshal(&settings)
+		if appConfig == nil {
+			v.Unmarshal(&Values)
+		} else {
+			v.Unmarshal(&appConfig)
+			Values = appConfig.GetBaseConfig()
+			//fmt.Printf("baseconfig %v\n", appConfig.GetBaseConfig())
+		}
+
 	}
 
 	fmt.Println("Config Initialized Success fully")
 }
 
 func initializeDefaultValue() {
-	Values = appConfig{
+	Values = BaseConfig{
 		Server:    DefalutServerConfig,
-		ZapConfig: logger.DefaultConfig,
+		ZapConfig: ZapConfig{},
 	}
 }
