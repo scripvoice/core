@@ -92,14 +92,19 @@ func InitializeFlag() {
 Should be called first to initialize the config.
 Value is populated from config file provided through flag and overridden by env
 */
-func Initialize() {
+func Initialize(settings interface{}) {
+
+	if settings == nil {
+		settings = Values
+	}
+
 	fmt.Println("Initializing config")
 	InitializeFlag()
 	initializeDefaultValue()
 	if v, err := LoadConfig(*ConfigPath); err != nil {
 		panic(err)
 	} else {
-		v.Unmarshal(&Values)
+		v.Unmarshal(&settings)
 	}
 
 	fmt.Println("Config Initialized Success fully")

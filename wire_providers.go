@@ -5,6 +5,7 @@ import (
 	config "github.com/scripvoice/core/config"
 	store "github.com/scripvoice/core/datastore"
 	infra "github.com/scripvoice/core/infrastructure"
+	logger "github.com/scripvoice/core/logger"
 	"github.com/spf13/viper"
 )
 
@@ -18,6 +19,10 @@ func ProvideDbContext() (*store.SqlStore, error) {
 
 func ProvideJwtAuth() *JwtAuth {
 	return NewJwtAuth()
+}
+
+func ProvideLogger() (logger.ILogger, error) {
+	return logger.GetLoggerInstance(config.Values.ZapConfig)
 }
 
 func ProvideEventFactory() *infra.EventFactory {
