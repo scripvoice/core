@@ -2,27 +2,12 @@ package core
 
 import (
 	"github.com/google/wire"
-	config "github.com/scripvoice/core/config"
-	store "github.com/scripvoice/core/datastore"
+	Auth "github.com/scripvoice/core/auth"
 	infra "github.com/scripvoice/core/infrastructure"
-	logger "github.com/scripvoice/core/logger"
-	"github.com/spf13/viper"
 )
 
-func ProvideMySqlContext() *MySqlContext {
-	return NewMySqlContext(viper.GetString("ConnectionString"))
-}
-
-func ProvideDbContext() (*store.SqlStore, error) {
-	return store.NewMysqlStore(config.Values.ConnectionString)
-}
-
-func ProvideJwtAuth() *JwtAuth {
-	return NewJwtAuth()
-}
-
-func ProvideLogger() (logger.ILogger, error) {
-	return logger.GetLogger()
+func ProvideJwtAuth() *Auth.JwtAuth {
+	return Auth.NewJwtAuth()
 }
 
 func ProvideEventFactory() *infra.EventFactory {
@@ -41,6 +26,5 @@ func ProvideDomainEventMediator(eventFactory *infra.EventFactory) *infra.DomainE
 	return infra.NewDomainEventMediator(eventFactory)
 }
 
-var DependencySet = wire.NewSet(
-	ProvideMySqlContext, ProvideJwtAuth, ProvideDbContext, ProvideEventFactory,
+var DependencySet = wire.NewSet(ProvideJwtAuth, ProvideEventFactory,
 	ProvideDomainEventMediator, ProvideCommandFactory, ProvideQueryFactory)

@@ -9,6 +9,8 @@ import (
 	"strings"
 
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var (
@@ -69,17 +71,16 @@ var DefalutServerConfig = ServerConfig{
 	Port: 8000,
 }
 
-type ZapConfig struct {
-	Level            string   `json:"level"`
-	Encoding         string   `json:"encoding"`
-	OutputPaths      []string `json:"outputPaths"`
-	ErrorOutputPaths []string `json:"errorOutputPaths"`
+type LogConfig struct {
+	Service string     `json:"service" yaml:"service"`
+	Zap     zap.Config `json:"zap" yaml:"zap"`
+	Sinks   []string   `json:"sinks" yaml:"sinks"`
 }
 
 type BaseConfig struct {
 	Server           ServerConfig
 	ConnectionString string
-	ZapConfig        ZapConfig
+	Log              LogConfig `json:"log" yaml:"log"`
 	Secret           string
 }
 
@@ -124,7 +125,19 @@ func Initialize(appConfig IAppConfig) {
 
 func initializeDefaultValue() {
 	Values = BaseConfig{
-		Server:    DefalutServerConfig,
-		ZapConfig: ZapConfig{},
+		Server: DefalutServerConfig,
+		Log: LogConfig{
+			Zap: DefaultZapConfig,
+		},
 	}
+}
+
+var DefaultZapConfig = zap.Config{
+	Encoding:         "json",
+	OutputPaths:      []string{"stdout", "log.log"},
+	ErrorOutputPaths: []string{"stderr", "log.log"},
+	EncoderConfig: zapcore.EncoderConfig{
+		MessageKey: "message",
+		LevelKey:   "level",
+	},
 }
